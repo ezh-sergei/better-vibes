@@ -18,20 +18,20 @@ You can use this set of rules for both a brand new project and an existing proje
 
 ## Workflow
 
-- [ ] Write Spec Notes
+1. Write Spec Notes
   - I generally start with a couple of notes on what I want to do in a bullet point list in a Markdown file in `docs/prds/feature-name.md`.
   - Use PRD best practices to explain what you want. The better the quality of these notes, the better the output of the spec during plan mode.
   - Most of this happens over Superwhisper as that's generally faster than typing.
-- [ ] Plan Mode
+2. Plan Mode
   - Initiate an agent in planning mode to do all the research about what I want to do: read code, libraries, read online resources and docs, ask me questions.
   - Slowly articulate and iterate towards a PRD that I think is a good level of depth for an agent to go execute on.
   - Once you're happy with the Spec part, ask the agent to convert your Notes using the PRD rules into a proper PRD and add a sequential implementation plan.
   - Ask the agent put all the details from research / context into the implementation notes section to hydrate it. The PRD template already contains all of these sections.
   - Iterate on the implementation plan itself - All the models are notoriously bad at picking the right level of detail to articulate steps. Ask for phases and stages if needed.
-- [ ] Implementation Mode
+3. Implementation Mode
   - Once I have a PRD, I kick off a new agent in implementation mode. One phase at a time.
   - If there are multiple phases that can be parallelized, I split them up into several background agents and have them cook in parallel.
-- [ ] Debug Mode
+4. Debug Mode
   - Once an agent has completed a phase, I switch the agent over into debug mode, and depending on the task, either debug together (frontend) or have the agent debug in a loop with tests.
   - I usually spend a couple of cycles switching between debug mode and implement mode. This is usually enough to get through most problems.
 
