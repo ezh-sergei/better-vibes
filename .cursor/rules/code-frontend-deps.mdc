@@ -1,0 +1,106 @@
+---
+description: Guidelines for managing frontend dependencies in this project
+globs: frontend/**/*
+alwaysApply: false
+---
+
+# Frontend Dependency Management
+
+Critical dependency management mistakes and compatibility rules for React Native/Expo development in this project.
+
+## Critical Installation Rules
+
+<expo_compatibility>
+
+- NEVER USE `npm install` for React Native/Expo projects - causes compatibility issues
+- ALWAYS use `npx expo install <package>` for React Native compatible versions
+- Expo CLI automatically selects compatible versions for the React Native version
+- Using npm install can break native modules and cause runtime errors
+
+</expo_compatibility>
+
+<agent_behavior>
+
+- Follow global command execution rules (see agent.mdc). Ask the user to run install/uninstall commands.
+- Provide exact commands for user to copy/paste and run
+- When suggesting new dependencies, include installation command with npx expo install
+- If user mentions dependency issues, first check if they used npm install instead of expo install
+
+</agent_behavior>
+
+## Operations Reference
+
+- For end-to-end dependency workflows and environment setup, see `docs/memory-bank/systemOperations.md`.
+
+## Dependency Categories
+
+<core_dependencies>
+
+- Core React Native/Expo packages: Use `npx expo install`
+- Native modules (camera, file system, etc.): Use `npx expo install`
+- UI libraries with native dependencies: Use `npx expo install`
+- Development tools that run in Node.js: Can use npm for devDependencies only
+
+</core_dependencies>
+
+<global_dependencies>
+
+- Add global development tools to setup scripts, not direct installs
+- Document global requirements in systemOperations.md
+- Include in onboarding documentation for new developers
+- Examples: CLI tools, development servers, build tools
+
+</global_dependencies>
+
+## Troubleshooting Patterns
+
+<common_issues>
+
+- "Module not found" errors: Check if package was installed with npm instead of expo
+- Version conflicts: Use `npx expo install --fix` to resolve compatibility
+- Native module issues: Clear cache and reinstall with expo install
+- Metro bundler errors: Often caused by mixing npm/expo install methods
+
+</common_issues>
+
+## Memory Bank References
+
+<documentation_references>
+
+- **Operational Commands**: See `docs/memory-bank/systemOperations.md` for complete dependency management workflows
+- **Technology Stack**: See `docs/memory-bank/techContext.md` for current dependency versions and constraints
+- **Architecture Overview**: See `docs/memory-bank/systemArchitecture.md` for how dependencies fit into overall system structure
+
+</documentation_references>
+
+## Related Rule Lookups
+
+<related_rules>
+
+- [code-frontend.mdc](mdc:.cursor/rules/code-frontend.mdc) - General frontend development patterns and conventions
+- [code-general.mdc](mdc:.cursor/rules/code-general.mdc) - Universal coding standards and guidelines
+
+</related_rules>
+
+## Examples
+
+### ✅ Correct Installation Commands
+
+```bash
+# Correct: Using expo install for React Native packages
+npx expo install react-native-svg
+npx expo install @react-navigation/native
+npx expo install expo-camera
+
+# Correct: npm for dev-only tools
+npm install --save-dev typescript @types/react
+```
+
+### ❌ Wrong Installation Commands
+
+```bash
+# WRONG: Using npm install for React Native packages
+npm install react-native-svg          # Can cause compatibility issues
+npm install @react-navigation/native  # May install incompatible versions
+npm install expo-camera               # Bypasses Expo's version management
+```

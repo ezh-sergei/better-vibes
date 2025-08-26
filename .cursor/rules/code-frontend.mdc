@@ -1,0 +1,265 @@
+---
+description: General instructions for frontend development in TypeScript, React Native and Expo
+globs: frontend/**/*
+alwaysApply: false
+---
+
+# Frontend Development Standards
+
+Opinionated patterns and common mistake prevention for TypeScript, React Native, and Expo development in this project.
+
+## Core Principles
+
+<lean_client_pattern>
+
+- Server is always the source of truth for data
+- Client displays data, captures input, manages UI state only
+- Avoid client-side business logic that duplicates server logic
+- Treat frontend as a smart presentation layer, not a business logic layer
+
+</lean_client_pattern>
+
+## TypeScript Patterns
+
+<type_definitions>
+
+- Use interfaces for component props (`interface UserProps`)
+- Never use `any` type - be explicit with types
+- Use union types for strict value sets (`type Status = 'loading' | 'success' | 'error'`)
+- Prefer `as const` for constants, literal maps and variants (`const UserRole = { ADMIN: 'ADMIN' } as const`); use `satisfies` to validate config objects against expected shapes at compile-time.
+- Avoid enums in favor of `as const` objects + union string literals.
+- Use discriminated unions to model UI state/variants with exhaustive handling.
+
+</type_definitions>
+
+<functional_patterns>
+
+- Prefer functional and declarative patterns (`items.filter(item => item.isValid)`)
+- Avoid imperative loops when map/filter/reduce work better
+- Extract complex logic into custom hooks
+- Name event handlers with `handleX` and pass stable callbacks via `useCallback` when consumed by memoized children or lists; avoid premature memoization otherwise.
+- Avoid inline object/array props for memoized children; hoist with `useMemo` when necessary.
+
+</functional_patterns>
+
+## Naming Conventions
+
+<file_naming>
+
+- Directories: kebab-case (`auth-wizard`, `data-analysis`)
+- Components: PascalCase (`UserProfile.tsx`, `ItemCard.tsx`)
+- Pages: lowercase single words ONLY (`settings.tsx`, `profile.tsx`, `togglegroup.tsx`)
+- Utilities: camelCase (`formatDate.ts`, `apiClient.ts`)
+- Custom hooks: prefix with "use" (`useAuth.ts`, `useAnalysis.ts`)
+
+</file_naming>
+
+<critical_web_compatibility>
+
+- Pages MUST use lowercase single words only - hyphens cause 404 errors on web
+- Metro bundler URL conflicts break routing with hyphenated filenames
+- Wrong: `user-profile.tsx`, `items-list.tsx`
+- Correct: `profile.tsx`, `items.tsx`
+
+</critical_web_compatibility>
+
+<variable_naming>
+
+- Use descriptive names: `isLoading`, `hasError`, `shouldUpdate` (not `loading`, `error`, `update`)
+- Variables: camelCase (`apiUrl`, `appName`, `items`)
+- Constants: camelCase (`maxRetryCount`, `defaultTimeout`, `apiBaseUrl`)
+
+</variable_naming>
+
+## Component Patterns
+
+<component_structure>
+
+- Use functional components exclusively - NO class components
+- Keep components small and focused on single responsibility
+- Extract reusable logic into custom hooks
+- Use `React.memo` for optimization when appropriate
+
+</component_structure>
+
+<component_organization>
+
+- Don't put multiple unrelated components in one file
+- Don't create overly complex components - break them down
+- Keep related small components in single file when they're tightly coupled
+
+</component_organization>
+
+## Styling Patterns
+
+<ui_library_usage>
+
+- Use the project’s design system and styled components; avoid ad-hoc inline styles.
+- For library-specific guidance (Tamagui themes, tokens, BackButton usage, animation hierarchy), see:
+  - `docs/memory-bank/systemPatterns.md`
+  - `docs/memory-bank/systemArchitecture.md`
+
+</ui_library_usage>
+
+<typography_and_sizing>
+
+- Use design system typography tokens and size tokens appropriately; avoid mixing.
+- Token specifics and exceptions (icons, SVG, literals) live in `docs/memory-bank/systemPatterns.md`.
+
+</typography_and_sizing>
+
+## State Management
+
+<local_state_guidelines>
+
+- OK: Computed/derived state from server data (`const filteredItems = useMemo(() => serverItems.filter(predicate), [serverItems])`)
+- OK: UI-only state (modal open/closed, form input values before submission)
+- AVOID: Non-reproducible local state that can't be derived from server data
+- AVOID: Client-side state that conflicts with server authority
+- Use custom hooks for complex state logic
+
+</local_state_guidelines>
+
+<server_state_authority>
+
+- Always treat server data as the single source of truth
+- Local state should be derivable from server state + user interactions
+- Use server state management library to handle caching and synchronization
+
+</server_state_authority>
+
+## Data Validation and Security
+
+<input_validation>
+
+- ALWAYS validate all user inputs with schema validation library
+- Define schemas for forms, API requests, and data transformations
+- Don't trust client-side validation alone - server must also validate
+
+</input_validation>
+
+<error_handling>
+
+- ALWAYS wrap API calls with proper error handling
+- Use error boundaries to catch and handle runtime errors gracefully
+- Provide meaningful error messages to users
+- NEVER roll your own security solutions - use established patterns
+
+</error_handling>
+
+<security_patterns>
+
+- Handle sensitive tokens securely using platform-appropriate storage
+- Validate all inputs to prevent injection attacks
+- Follow established authentication patterns (see memory bank for specific implementation)
+
+</security_patterns>
+
+## Performance Patterns
+
+<optimization_techniques>
+
+- Memoize expensive computations with `useMemo` and `useCallback`
+- Always provide appropriate keys for list items
+- Consider code splitting for larger components
+- Avoid premature optimization - measure first
+- React Native lists: provide stable keys, avoid derived keys from indices; keep list item props stable where possible to minimize re-renders.
+
+</optimization_techniques>
+
+## Effects, Routing and Stability
+
+<effects_routing_stability>
+
+- Prefer minimal, single-purpose effects; guard early with stable deps.
+- Use refs for long-lived callbacks; JIT external calls where freshness matters.
+- For routing/state/observability specifics (Expo Router patterns, Sentry setup, Zustand/React Query), see:
+  - `docs/memory-bank/systemArchitecture.md`
+
+</effects_routing_stability>
+
+## Memory Bank References
+
+<documentation_references>
+
+- **Design System Rules**: See `docs/memory-bank/systemPatterns.md` for complete styling guidelines and library-specific usage
+- **Component Architecture**: See `docs/memory-bank/systemArchitecture.md` for frontend structure and organization
+- **State Management**: See `docs/memory-bank/systemArchitecture.md` for specific state management library patterns
+- **Technical Constraints**: See `docs/memory-bank/techContext.md` for platform limitations and library constraints
+
+</documentation_references>
+
+## Related Rule Lookups
+
+<related_rules>
+
+- [code-frontend-deps.mdc](mdc:.cursor/rules/code-frontend-deps.mdc) - Standards for managing frontend dependencies
+- [code-general.mdc](mdc:.cursor/rules/code-general.mdc) - Essential rules for maintaining consistency across the project
+
+</related_rules>
+
+## Examples
+
+### ✅ Good File Naming
+
+```text
+app/(tabs)/profile.tsx          # Correct: single word
+app/(tabs)/settings.tsx         # Correct: single word
+components/UserCard.tsx         # Correct: PascalCase component
+utils/formatDate.ts            # Correct: camelCase utility
+```
+
+### ❌ Bad File Naming (Breaks Web)
+
+```text
+app/(tabs)/user-profile.tsx     # WRONG: causes 404 on web
+app/(tabs)/items-list.tsx       # WRONG: hyphens break URLs
+components/user-card.tsx        # WRONG: should be PascalCase
+```
+
+### ✅ Good State Management
+
+```tsx
+// Good: Derived from server data
+const ItemsComponent = ({ serverItems }) => {
+  const filteredItems = useMemo(
+    () => serverItems.filter((item) => item.isAvailable),
+    [serverItems]
+  );
+
+  // Good: UI-only state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return /* component */;
+};
+```
+
+### ❌ Bad State Management
+
+```tsx
+// Bad: Non-server-authoritative state
+const [userPreferences, setUserPreferences] = useState({}); // Should come from server
+const [calculatedPrice, setCalculatedPrice] = useState(0); // Should be computed from server data
+```
+
+### ✅ Good Component Pattern
+
+```tsx
+interface ItemProps {
+  title: string;
+  isSelected: boolean;
+}
+
+const Item: React.FC<ItemProps> = ({ title, isSelected }) => {
+  // Component logic here
+};
+```
+
+### ❌ Bad Component Pattern
+
+```tsx
+// Don't use any types
+const Item = ({ title, isSelected }: any) => {
+  // Component logic here
+};
+```

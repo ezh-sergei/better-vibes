@@ -1,0 +1,36 @@
+---
+description: Backend workflow guidance for agents. Instructions on operational commands. Use this rule when making any backend changes. Especially useful in background mode.
+alwaysApply: false
+---
+
+# Backend Development Workflow
+
+<workflow_lookup>
+
+- Use `make help` at the project root to discover core service and maintenance targets.
+- Use `make help` in `backend/` to discover backend quality, testing, and ops targets.
+- Consult `docs/memory-bank/systemOperations.md` for authoritative workflows and any environment caveats.
+
+</workflow_lookup>
+
+<execution_policies>
+
+- Prefer Make targets over invoking scripts directly; avoid hard-coded commands in rule invocations.
+- Do not run destructive operations (db trims/resets, clear-all cache, mass deletes); only the user may execute such commands.
+- Follow command execution rules in `agent.mdc` (correct working directory, background for long-running tasks, no pagers forced).
+
+</execution_policies>
+
+<quality_checks>
+
+- Before proposing backend code changes, ensure formatting and types are clean via the appropriate Make target (see `make help`).
+- After edits, run a lightweight type check via the backend Make target when applicable.
+- Use ops docs for any specialized flows (DB migrations, cache management, CI parity).
+
+</quality_checks>
+
+## References
+
+- Source of truth: @systemOperations.md
+- Root Makefile targets (Core Services, Setup & Maintenance): see project root `Makefile` and run `make help`.
+- Backend Makefile targets (Quality, Testing, Redis/Postgres ops): see `backend/Makefile` and run `make help`.

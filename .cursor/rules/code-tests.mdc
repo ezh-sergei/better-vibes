@@ -1,0 +1,132 @@
+---
+globs: backend/tests/**/*
+alwaysApply: false
+---
+
+# Testing: Backend Pytest
+
+Standards for writing fast, readable, and stable backend tests with pytest. Focus on behavior over implementation, mock only I/O/external dependencies, and keep tests deterministic and quick.
+
+## Test Philosophy
+
+<test_philosophy>
+
+- Prefer behavior verification over implementation details; tests should survive refactors.
+- Mock only I/O and external services (LLM calls, HTTP fetchers, Redis, DB sessions, storage, third‑party APIs); do not mock internal logic.
+- Favor unit tests for logic correctness; add integration tests for critical flows; use E2E sparingly.
+- Keep tests fast and deterministic; avoid real sleeps, network, and filesystem.
+
+</test_philosophy>
+
+## Structure and Naming
+
+<structure_and_naming>
+
+- Use Arrange–Act–Assert (AAA) structure; separate setup, execution, and assertions clearly.
+- Name tests descriptively: `test_<function_or_flow>_<condition>_<expected_result>`.
+- One logical assertion theme per test (multiple asserts allowed when validating the same behavior).
+- Mirror feature structure in directories; co‑locate suite‑specific fixtures and `mock_data.py` when helpful.
+
+</structure_and_naming>
+
+## Pytest Conventions (Project‑Specific)
+
+<pytest_conventions>
+
+- Rely on global fixtures in `backend/tests/conftest.py` (autouse `asyncio.sleep` mock; integration‑only auth override; performance guard; cache and DB no‑op fixtures). Do not re‑implement these per test.
+- For async tests, use `@pytest.mark.asyncio`. For HTTP integration, use `TestClient(app)`.
+- Keep integration tests under the 0.5s performance guard; slow tests usually indicate missing mocks.
+- Use realistic data that conforms to Pydantic schemas; prefer importing existing suite `mock_data`.
+
+</pytest_conventions>
+
+## Mocking Policy
+
+<mocking_policy>
+
+- Patch external boundaries at the import path used by the code under test (e.g., LLM: `structured_completion_async`, image downloaders, clients, storage, Redis, DB session factories).
+- Keep patch scope minimal; prefer context managers/decorators over global monkeypatching.
+- Assert calls and arguments only when behavior depends on them; otherwise assert outputs and state.
+- Use side‑effect factories for complex responses (e.g., workflow‑level LLM responses) to keep tests readable.
+
+</mocking_policy>
+
+## Integration Tests Guidance
+
+<integration_tests>
+
+- Exercise real routing and workflow orchestration; mock external calls (image download, LLM, third-party APIs, storage, Redis, DB).
+- Use auto auth override (`mock_current_user`), `mock_cache_service`, and `db_session_noop` fixtures from `conftest.py`.
+- Validate responses via Pydantic models (e.g., `Model.model_validate(data)`); assert key invariants (ordering, required fields).
+- Treat performance‑guard failures as missing mocks; fix by patching I/O, not by increasing timeouts.
+
+</integration_tests>
+
+## Unit Tests Guidance
+
+<unit_tests>
+
+- Target a single code path; cover success, error, and edge cases with minimal setup.
+- Prefer pure inputs; avoid shared mutable state; keep tests independent and order‑agnostic.
+- Do not sleep; rely on the autouse `asyncio.sleep` mock; avoid timers/time‑based flakiness.
+- Validate exceptions and error messages when part of the contract.
+
+</unit_tests>
+
+## Test Data and Schemas
+
+<test_data_and_schemas>
+
+- Validate data structures with Pydantic (`model_validate`) rather than loose dict shape checks.
+- Keep mock payloads realistic and schema‑accurate; centralize per suite in `mock_data.py` when appropriate.
+- Prefer small, focused fixtures; extract only when reuse improves clarity.
+
+</test_data_and_schemas>
+
+## Observability in Tests
+
+<observability_in_tests>
+
+- Avoid asserting on log strings unless behavior‑critical; prefer asserting functional outcomes.
+- Let the integration performance guard surface slow/missing‑mock issues; do not add sleeps to "fix" timing.
+
+</observability_in_tests>
+
+## CI and Local Commands
+
+<ci_and_local>
+
+- Use project Make targets for running tests and coverage; see System Operations for canonical commands.
+- Keep tests parallel‑friendly and order‑independent; avoid global state.
+
+</ci_and_local>
+
+## Self‑Check Before Submitting Tests
+
+<self_check>
+
+- Does the test mock only I/O/external boundaries and verify behavior, not implementation?
+- Is it fast, deterministic, and under the integration performance guard when applicable?
+- Does it use AAA, clear naming, and schema validation for responses?
+- Are fixtures/mocks minimal, scoped, and aligned with `tests/conftest.py` patterns?
+
+</self_check>
+
+## Memory Bank References
+
+- See `docs/memory-bank/systemPatterns.md` (Backend Patterns: Integration Testing) for established patterns and examples.
+- See `docs/memory-bank/systemOperations.md` for test commands and workflows.
+
+## Related Rule Lookups
+
+<related_rules>
+
+- @code-backend.mdc
+- @agent-mode-debug.mdc
+- @rules-cursor.mdc
+
+</related_rules>
+
+## Examples
+
+Examples live in System Patterns; see `docs/memory-bank/systemPatterns.md` for representative unit and integration test references.

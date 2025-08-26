@@ -1,0 +1,211 @@
+---
+description: General rules for writing backend code in Python, FastAPI, and SQLAlchemy
+globs: backend/**/*
+alwaysApply: false
+---
+
+# Backend Development Standards
+
+Essential rules for writing maintainable backend code in Python, FastAPI, and SQLAlchemy. Prioritize simplicity, elegance, and adherence to FastAPI ecosystem conventions.
+
+## General Programming Principles
+
+<code_organization>
+
+- Keep business logic separate from routing logic - move complex operations to service layer
+- Use early returns to avoid nesting (`if error: return error_response`)
+- Add single-line docstrings to major functions and classes for maintainability
+- Follow project structure and patterns detailed in memory bank
+
+</code_organization>
+
+## Python Patterns
+
+<type_hints_and_documentation>
+
+- Use type hints for all function signatures (`def get_user(user_id: int) -> User`)
+- Prefer Pydantic 2.0 models over raw dictionaries (`class UserCreate(BaseModel)`)
+- Enables static analysis, self-documenting code, and runtime validation
+- Ensures automatic API documentation generation
+
+</type_hints_and_documentation>
+
+<imports_and_ordering>
+
+- All imports MUST be at the top of the file, before any executable code, functions, or classes.
+- NEVER inline imports inside functions, classes, or code blocks; refactor them to the top.
+- Follow canonical imports rules in `code-general.mdc`. Backend auto-sorts/group imports with `make format` (isort/Black) when imports are at the top.
+
+</imports_and_ordering>
+
+<async_programming>
+
+- Use async/await for I/O operations (`async def get_user_data()`)
+- Ensure compatibility with FastAPI async patterns
+- Use the project's LLM workflow engine for LLM operations (native async with event-driven parallelism)
+- Improves error handling clarity and performance
+
+</async_programming>
+
+<naming_conventions>
+
+- Files: lowercase with underscores (`user_service.py`)
+- Classes: PascalCase (`UserModel`)
+- Functions/variables: lowercase with underscores (`get_user_by_id`)
+- Constants: uppercase with underscores (`MAX_CONNECTIONS`)
+
+</naming_conventions>
+
+## FastAPI Best Practices
+
+<route_design>
+
+- Keep routes non-blocking - use async/await (`async def create_user()`)
+- Use dependency injection for shared resources (`ServiceDependency`, `UserService.getService`)
+- Define clear response models (`response_model=UserResponse`)
+- Use proper HTTP status codes (`status_code=status.HTTP_201_CREATED`)
+- Organize routes by feature area using `APIRouter`
+
+</route_design>
+
+<background_processing>
+
+- Use the project's LLM workflow engine for LLM operations (native async processing)
+- Use the established background worker system (`BackgroundWorkerService`) for other longer/blocking operations
+- Implement proper error responses (`HTTPException(status_code=400)`)
+- Handle async operations appropriately
+
+</background_processing>
+
+## LLM Workflow Integration
+
+<workflow_design>
+
+- Use the project's LLM workflow engine as the basis for LLM operations.
+- Follow architecture and established patterns in internal documentation:
+  - LLM pipeline overview: `docs/memory-bank/systemArchitecture.md`
+  - Workflow patterns and conventions: `docs/memory-bank/systemPatterns.md`
+
+</workflow_design>
+
+## Database and Models
+
+<sqlalchemy_usage>
+
+- Use established database/ORM patterns (SQLAlchemy 2.0, Alembic migrations)
+- See `backend/app/models.py` for current model definitions
+- Manage migrations using `./run-backend.sh` commands
+- Follow patterns detailed in memory bank
+
+</sqlalchemy_usage>
+
+<model_design>
+
+- Keep models and schemas in sync (`UserModel` matches `UserSchema`)
+- Use appropriate column types (`Column(UUID, primary_key=True)`)
+- Implement proper indexes for query patterns
+- Maintain consistency between database and API models
+
+</model_design>
+
+## Error Handling and Validation
+
+<error_types>
+
+- Client errors (4xx): Use HTTPException (`raise HTTPException(400, "Invalid input")`)
+- Server errors (5xx): Use custom exceptions (`class DatabaseConnectionError(Exception)`)
+- Return clear error messages (`{"detail": "User not found"}`)
+- Differentiate between client and server error types
+
+</error_types>
+
+<validation_patterns>
+
+- Use Pydantic for input validation (`class UserCreate(BaseModel)`)
+- Implement proper error boundaries (try/except with specific exceptions)
+- Validate environment variables using Pydantic
+- Use custom exception classes for domain-specific errors
+
+</validation_patterns>
+
+## Logging and Monitoring
+
+<logging_practices>
+
+- Use structured logging with context (`logger.info("user_created", user_id=user.id, total_users=count)`)
+- Debug logs should include actual values (`logger.debug("processing_user", user=user_data)`)
+- Info logs should contain statistics (`logger.info("batch_processed", count=len(items))`)
+- Follow conventions in `backend/app/logging.py`
+
+</logging_practices>
+
+<monitoring_integration>
+
+- Utilize established monitoring setup (Prometheus dev / Alloy prod)
+- Follow telemetry/OTLP integration patterns from memory bank
+- Implement appropriate metrics collection for business logic
+
+</monitoring_integration>
+
+## Security and Performance
+
+<security_practices>
+
+- Implement rate limiting (`@limiter.limit("5/minute")`)
+- Sanitize all inputs using Pydantic validation
+- Use secure headers (CORS configured in `backend/app/main.py`)
+- Keep secrets in environment variables (`config.SECRET_KEY`)
+- Follow authentication best practices (token expiration, refresh flow, secure storage)
+
+</security_practices>
+
+<performance_optimization>
+
+- Leverage Redis caching as configured (see usage in `ExampleWorkflow`)
+- Implement proper database query optimization
+- Use pagination for large datasets
+- Cache frequently accessed data appropriately
+
+</performance_optimization>
+
+## Testing Strategy
+
+<testing_approach>
+
+- Focus on critical workflow testing (main API endpoints, authentication flow)
+- Verify core business logic and error handling paths
+- Use FastAPI's TestClient for endpoint testing when requested
+- Add tests when implementing new critical features or fixing bugs
+
+</testing_approach>
+
+## Memory Bank References
+
+<documentation_references>
+
+- **System Patterns**: See `docs/memory-bank/systemPatterns.md` for established backend patterns and conventions
+- **Technology Context**: See `docs/memory-bank/techContext.md` for technology stack and constraints
+- **Architecture Overview**: See `docs/memory-bank/systemArchitecture.md` for backend structure and service boundaries
+- **Operational Workflows**: See `docs/memory-bank/systemOperations.md` for backend development and deployment workflows
+
+</documentation_references>
+
+## Development Commands
+
+<makefile_workflow>
+
+For the canonical list of backend development commands and workflows, see @code-backend-workflow.mdc
+
+</makefile_workflow>
+
+## Related Rule Lookups
+
+<related_rules>
+
+- [code-general.mdc](mdc:.cursor/rules/code-general.mdc) - Essential rules for maintaining consistency across the project
+
+</related_rules>
+
+## Examples
+
+See codebase references for concrete patterns;

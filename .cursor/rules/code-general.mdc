@@ -1,0 +1,122 @@
+---
+description: Rule for code quality and development standards. Applies to all code written in this project.
+globs: \*_/_
+alwaysApply: true
+---
+
+# {ProjectName} Code Standards
+
+Essential code quality rules for building in this project. These rules must always be followed.
+
+## Code Standards and Principles
+
+<documentation_and_comments>
+
+- Write self-documenting code with clear, descriptive names for variables, functions, and classes.
+- Minimal Commenting Rule: Write at most one-line comments per logical section of code, and only if it's critical for code understanding.
+- IMPORTANT: Do not include personal stream-of-consciousness notes, chat transcripts, or other conversational material in source comments.
+- Focus comments on explaining **why** a decision or non-obvious constraint exists, not what the code is doing.
+- Keep comments succinct, colocated with the code they clarify, and revise or remove them whenever the code changes.
+- Document assumptions, pre-/post-conditions, concurrency or security caveats that cannot be expressed through types, tests, or contracts.
+- Avoid decorative separators, ASCII art, commented-out code, or any other noisy “wall of text” constructs. Keep logs and examples terse and relevant.
+
+</documentation_and_comments>
+
+<better_comments_style>
+
+- Use "Better Comments" annotations for terse, high-signal comments:
+  - `// *` section headings or comments that should stand out to organize the code
+  - `// !` critical issues or important warnings
+  - `// ?` questions or uncertainties to resolve
+  - `// TODO` actionable follow-ups (keep to near-term; otherwise use PRD backlog)
+  - `// NOTE` non-obvious rationale/assumptions essential to understand the code
+- Keep each annotation to one line where possible; avoid narrative blocks.
+- Remove or resolve temporary `?`/`TODO` annotations during cleanup before merge when addressed.
+
+</better_comments_style>
+
+<code_quality>
+
+- Write concise, self-documenting code with clear intent and descriptive names.
+- Use functional and declarative patterns over imperative ones.
+- Handle errors early and explicitly, considering edge cases.
+- Keep code modular with single-purpose functions.
+- Use type hints and strong typing everywhere possible.
+- Address linter errors and breaking problems immediately as you encounter them.
+- Do not use `# type: ignore` (of any flavor) unless it is the last resort and the underlying issue originates in a third-party library we do not own and do not plan to fork.
+- If you must use it, target the specific error code (e.g., `# type: ignore[assignment]`), add a one-line rationale, and link to an upstream issue when possible. Strongly prefer fixing types properly first.
+- Prefer fixing types properly: refine type annotations, add/adjust Pydantic models, introduce Protocols/TypedDicts/overloads, or refactor code to satisfy the type checker.
+- Prefer immutability: use `readonly` properties/arrays and avoid in-place mutation when practical.
+- Make union handling exhaustive by adding a `never` check in default branches of `switch` on discriminants.
+- Use `import type { X } from "..."` for type-only imports to avoid runtime impact.
+- Prefer `unknown` over `any` and narrow explicitly; avoid non-null assertions (`!`).
+
+</code_quality>
+
+<dependencies>
+
+- Prefer built-in libraries and core ecosystem tools.
+- Only add new dependencies when absolutely necessary and explicitly requested.
+- Maintain existing library versions unless asked to update.
+- Imports placement: All imports MUST be at the top of the file, before any executable code, functions, or classes. NEVER inline imports inside functions, classes, or code blocks; refactor them to the top.
+
+</dependencies>
+
+<code_organization>
+
+- Follow the established project structure and patterns detailed in `docs/memory-bank/systemPatterns.md`.
+- Keep related code close together.
+- This is a monorepo. Maintain clear separation between frontend and backend.
+- Check how similar functionality is implemented elsewhere in the codebase.
+- Utilize existing utilities and helpers before creating new ones.
+
+</code_organization>
+
+## Examples
+
+### Documentation Examples
+
+Good (self-documenting code):
+
+```typescript
+function calculateTotalPrice(items: OrderItem[], taxRate: number): number {
+  const subtotal = items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const taxAmount = subtotal * taxRate;
+  return subtotal + taxAmount;
+}
+```
+
+Good (with acceptable header comment for complex logic):
+
+```typescript
+// Calculates price with tax based on item quantities and current tax rate
+function calculateTotalPrice(items: OrderItem[], taxRate: number): number {
+  const subtotal = items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const taxAmount = subtotal * taxRate;
+  return subtotal + taxAmount;
+}
+```
+
+BAD (unnecessary comments and redundant separators):
+
+```typescript
+// ----------------------------------------
+// Function to calculate the total price
+// ----------------------------------------
+// This function calculates the total price
+function calcTotal(i: OrderItem[], t: number): number {
+  // Calculate the subtotal first
+  const st = i.reduce((tot, item) => tot + item.price * item.quantity, 0);
+  // Add tax to the subtotal
+  const tax = st * t;
+  // Return the final amount
+  return st + tax;
+}
+// --- End Total Price Calculation ---
+```

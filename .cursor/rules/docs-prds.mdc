@@ -1,0 +1,177 @@
+---
+description: Standards for writing and organizing Product Requirements Documents
+globs: docs/prds/**/*
+alwaysApply: false
+---
+
+# PRD Documentation Standards
+
+Rules for writing and organizing Product Requirements Documents (PRDs) in the repository.
+
+## File Organization
+
+<directory_structure>
+
+- Place PRD files in PROJECT_ROOT/docs/prds/ with appropriate subdirectories.
+- Use /docs/prds/backend/ for backend features.
+- Use /docs/prds/frontend/ for frontend features.
+- Use dash case for filenames with .md extension.
+- Make filenames descriptive of the feature.
+
+</directory_structure>
+
+## Content Structure
+
+<required_sections>
+
+- Every PRD must include these sections in order:
+  - Title (Feature Name)
+  - User Story
+  - Spec
+  - End-User Tests
+  - Implementation Plan
+  - Implementation Notes
+
+</required_sections>
+
+<prd_template>
+
+```markdown
+# [Area]: [Feature Name]
+
+## User Story
+
+As a user, I want to [action/goal], so that [benefit/outcome].
+
+## Spec
+
+### Architecture/Components
+
+- Overview of the feature architecture, information architecture, key user flows.
+- Key components and their relationships
+
+### Technical Requirements (if needed)
+
+- Detailed technical specifications
+- API requirements
+- UI/UX requirements
+- Performance considerations
+
+### Dependencies (if introducing major new libraries)
+
+- Required libraries/packages
+- External services
+- Internal dependencies
+
+## End-User Tests
+
+- As a user, I should be able to [specific action]
+- As a user, I should see [expected result]
+- As a user, I should not be able to [prohibited action]
+
+## Implementation Plan
+
+### Stage 1: [First Milestone]
+
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+### Stage 2: [Second Milestone]
+
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+## Implementation Notes
+
+- **[Topic]**: Technical details, considerations, or decisions.
+- **Examples/Stubs**: All code blocks should live in this section.
+- **Developer Scratchpad**: Capture necessary implementation details,
+- **Edge Cases**: Document important edge cases to handle
+- **Future Improvements**: Note potential future enhancements
+
+### Decision Log (required)
+
+- Max 3 bullets per logical unit: decision made, rationale, alternatives rejected.
+- Include links to exact files/lines/PRs when relevant.
+```
+
+</prd_template>
+
+## Writing Guidelines
+
+<user_story>
+
+- Focus on user benefit, not technical implementation.
+- Use format: "As a [user type], I want to [action], so that [benefit]".
+- Keep it concise and focused on a single feature.
+
+</user_story>
+
+<spec>
+
+- Architecture/Components is the product specification. It must fully describe the feature being built, or the architecture for engineering projects.
+- Technical Requirements is the technical specification. It must fully de-risk the approach before implementation.
+- Be specific about architecture, components, data models, APIs, error handling, performance, security, and testing strategy.
+- When relevant, call out security considerations explicitly (data handling, access control, secrets, validation).
+- Reference existing components/patterns and name exact files/modules to be changed or adopted.
+- Include mockups or diagrams only if helpful.
+- Do NOT include code snippets here; place examples in Implementation Notes.
+
+</spec>
+
+<end_user_tests>
+
+- Write from the user's perspective.
+- Cover all key user interactions.
+- Include both positive and negative test cases.
+- Use format: "As a user, I should [expected behavior]".
+- Sort by importance of flows. Limit to 3 flows max unless the feature is very complex.
+
+</end_user_tests>
+
+<implementation_plan>
+
+- Create a sequential checklist of discrete, self-contained steps framed around outcomes.
+- Use checkboxes and optionally stages/phases only when it improves execution order.
+- Prefer sequencing by independently testable/reviewable modules over grouping by task type.
+- Each section must be testable end-to-end locally OR begin with writing tests in code.
+- Name target files/modules where possible; each step should yield a reviewable change.
+
+</implementation_plan>
+
+## PRD Maintenance
+
+<progress_tracking>
+
+- Update checkboxes as tasks are completed.
+- Document deviations from the original plan in Implementation Notes.
+- Add notes about implementation decisions from chat.
+- Keep the PRD in sync with actual implementation.
+- Update affected sections when requirements change.
+
+</progress_tracking>
+
+## Self-Check Before Responding
+
+<self_check>
+
+- Have you placed the PRD in the correct directory?
+- Does the PRD include all required sections in the correct order?
+- Is the User Story focused on user benefit rather than technical implementation?
+- Are Implementation Plan stages logical and manually testable?
+- Have you kept the content concise while maintaining clarity?
+- Are End-User Tests written from the user's perspective?
+
+</self_check>
+
+## Related Rule Lookups
+
+<related_rules>
+
+- [agent.mdc](mdc:.cursor/rules/agent.mdc) - Master rule for agent behavior
+- [agent-mode-plan.mdc](mdc:.cursor/rules/agent-mode-plan.mdc) - Guidelines for planning phases
+- [agent-mode-implement.mdc](mdc:.cursor/rules/agent-mode-implement.mdc) - Guidelines for implementation phases
+
+</related_rules>
