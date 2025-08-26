@@ -12,8 +12,8 @@ You can use this set of rules for both a brand new project and an existing proje
 
 - [ ] Clone/Fork/Copy the rules.
 - [ ] Ask Cursor to clean the `code-*` rules of anything that doesn't match your project's needs.
-- [ ] Copy or create the required folders. (`/docs/*`)
-- [ ] Existing Project: Ask Cursor to initialize their memory bank. Depending on the size of your codebase, this might take many chats as the agent works through all of your code and all of your documentation that you have in the repo.
+- [ ] Copy or create the required folders if you'd like to start fresh. (`/docs/*`)
+- [ ] Existing Project: Ask Cursor to `initialize your memory bank`. Depending on the size of your project, this might take many chats as the agent works through all of your code and all of your documentation that you have in the repo. Keep going until you feel the memory bank is well hydrated.
 - [ ] Write your first spec notes and enjoy the Better Vibes.
 
 ## Workflow
