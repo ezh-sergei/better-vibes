@@ -18,20 +18,20 @@ You can use this set of rules for both a brand new project and an existing proje
 
 ## Workflow
 
-- [ ] Write Spec Notes
+### Write Spec Notes
   - I generally start with a couple of notes on what I want to do in a bullet point list in a Markdown file in `docs/prds/feature-name.md`.
   - Use PRD best practices to explain what you want. The better the quality of these notes, the better the output of the spec during plan mode.
   - Most of this happens over Superwhisper as that's generally faster than typing.
-- [ ] Plan Mode
+### Plan Mode
   - Initiate an agent in planning mode to do all the research about what I want to do: read code, libraries, read online resources and docs, ask me questions.
   - Slowly articulate and iterate towards a PRD that I think is a good level of depth for an agent to go execute on.
   - Once you're happy with the Spec part, ask the agent to convert your Notes using the PRD rules into a proper PRD and add a sequential implementation plan.
   - Ask the agent put all the details from research / context into the implementation notes section to hydrate it. The PRD template already contains all of these sections.
   - Iterate on the implementation plan itself - All the models are notoriously bad at picking the right level of detail to articulate steps. Ask for phases and stages if needed.
-- [ ] Implementation Mode
+### Implementation Mode
   - Once I have a PRD, I kick off a new agent in implementation mode. One phase at a time.
   - If there are multiple phases that can be parallelized, I split them up into several background agents and have them cook in parallel.
-- [ ] Debug Mode
+### Debug Mode
   - Once an agent has completed a phase, I switch the agent over into debug mode, and depending on the task, either debug together (frontend) or have the agent debug in a loop with tests.
   - I usually spend a couple of cycles switching between debug mode and implement mode. This is usually enough to get through most problems.
 
@@ -42,6 +42,7 @@ You can use this set of rules for both a brand new project and an existing proje
 - Sometimes the agent gets confused whether they're planning or implementing. In those situations, I just use the keywords and trigger words to clarify it. This is what the headers are for for each of the modes so that it's very clear to you which ruleset the agent is applying.
 - Sometimes you have to remind the agent to not write any code but actually do root cause analysis in debug mode. GPT is better at debugging than Claude or Gemini 2.5.
 - I tried hard to make GPT-5 follow the Persona guidelines, but I couldn't take the autism out of that model. Use Claude or Gemini if you want to enjoy some of the chats with the agent.
+- If you're planning with GPT-5, you will need to explicitly ask for sequential steps and phases that make sense. GPT-5 is pretty bad at task planning out of the box.
 
 ## Models
 
