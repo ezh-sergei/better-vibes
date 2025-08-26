@@ -42,6 +42,7 @@ You can use this set of rules for both a brand new project and an existing proje
 - Sometimes the agent gets confused whether they're planning or implementing. In those situations, I just use the keywords and trigger words to clarify it. This is what the headers are for for each of the modes so that it's very clear to you which ruleset the agent is applying.
 - Sometimes you have to remind the agent to not write any code but actually do root cause analysis in debug mode. GPT is better at debugging than Claude or Gemini 2.5.
 - I tried hard to make GPT-5 follow the Persona guidelines, but I couldn't take the autism out of that model. Use Claude or Gemini if you want to enjoy some of the chats with the agent.
+- If you're planning with GPT-5, you will need to explicitly ask for sequential steps and phases that make sense. GPT-5 is pretty bad at task planning out of the box.
 
 ## Models
 
