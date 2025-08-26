@@ -1,17 +1,20 @@
 # Better Vibes
 
-Opinionated set of rules for agentic coding with Cursor. Adopted ideas / approaches from various sources and iterated on them as I was using them over the last few months.
+Opinionated set of rules for agentic coding with Cursor. Adopted ideas / approaches from various blogs, forum posts, discord chats and iterated on / evolved them as I was using them over the last few months.
 
 ## Context
 
-I developed a set of rules over the last 6 months as I've been building a mobile app backed by a python backend with heavy llm workflows. Apologies for any overly specific rules that reference either React Native Expo or Python in here.
+I developed a set of rules over the last 6 months as I've been building a mobile app backed by a python backend with heavy llm workflows. Apologies for any overly specific rules that reference either React Native Expo or Python in here. I can keep these updated periodically if this is of interest to folks.
 
 ## Setup
 
+You can use this set of rules for both a brand new project and an existing project.
+
 - [ ] Clone/Fork/Copy the rules.
+- [ ] Ask Cursor to clean the `code-*` rules of anything that doesn't match your project's needs.
 - [ ] Copy or create the required folders. (`/docs/*`)
-- [ ] First run: Ask Cursor to initialize their memory bank. Depending on the size of your codebase, this might take many chats as the agent works through all of your code and all of your documentation that you have in the repo.
-- [ ] Write your first spec notes.
+- [ ] Existing Project: Ask Cursor to initialize their memory bank. Depending on the size of your codebase, this might take many chats as the agent works through all of your code and all of your documentation that you have in the repo.
+- [ ] Write your first spec notes and enjoy the Better Vibes.
 
 ## Workflow
 
